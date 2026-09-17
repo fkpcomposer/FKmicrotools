@@ -1,2 +1,2 @@
 # FKmicrotools
-Janky extensions for the micro:bit I did for fun :3
+Janky extensions for the micro:bit made for fun :3
