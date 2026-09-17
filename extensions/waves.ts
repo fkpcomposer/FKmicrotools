@@ -17,7 +17,6 @@ let labelArray = [
     "D2",
     "d2",
     "E2",
-    "e2",
     "F2",
     "f2",
     "G2",
@@ -87,11 +86,17 @@ let timbreArray = [
     WaveShape.Noise
 ]
 
+let volumeFxArray = [
+    "255 255",
+    "255 100",
+    "255 000",
+    "000 255",
+    "100 255",
+]
+
 enum WavesPreset {
-    //% block='"SMB Overworld" by Koji Kondo'
-    MarioOverworld,
-    //% block='"Mulberry Shrine" by FKPC'
-    MulberryShrine
+    //% block='"Spring" by Vivaldi'
+    VivaldiSpring
 }
 
 enum WavesActions {
@@ -101,7 +106,438 @@ enum WavesActions {
     Pause
 }
 
+let displayArray = [
+    images.createImage(`
+    . . . . .
+    . # # # .
+    . # . # .
+    . # # # .
+    . . . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # . . .
+    . # # # .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    # # # . .
+    # . . . #
+    # # # . .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    . # # . .
+    . # . # .
+    . # # # .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    # # . . .
+    # . # . #
+    # # # . .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # # . .
+    . # # # .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # # . .
+    . # . . .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    # # # . .
+    # # . . #
+    # . . . .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    . # . . .
+    . # . # .
+    . # # # .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    # . . . .
+    # . # . #
+    # # # . .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    . . # . .
+    . # # # .
+    . # . # .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    . # . . .
+    # # # . #
+    # . # . .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    . # # . .
+    . # # # .
+    . # # # .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # . . .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    # # # . .
+    # . . . #
+    # # # . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # . .
+    . # . # .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    # # . . .
+    # . # . #
+    # # # . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # # . .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # # . .
+    . # . . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    # # # . .
+    # # . . #
+    # . . . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # . . .
+    . # . # .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    # . . . .
+    # . # . #
+    # # # . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . . # . .
+    . # # # .
+    . # . # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # . . .
+    # # # . #
+    # . # . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # . .
+    . # # # .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # . . .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    # # # . .
+    # . . . #
+    # # # . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # . .
+    . # . # .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    # # . . .
+    # . # . #
+    # # # . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # # . .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # # . .
+    . # . . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    # # # . .
+    # # . . #
+    # . . . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # . . .
+    . # . # .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    # . . . .
+    # . # . #
+    # # # . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . . # . .
+    . # # # .
+    . # . # .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    . # . . .
+    # # # . #
+    # . # . .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    . # # . .
+    . # # # .
+    . # # # .
+    . . . . .
+    # . . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # . . .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    # # # . .
+    # . . . #
+    # # # . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # . .
+    . # . # .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    # # . . .
+    # . # . #
+    # # # . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # # . .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # # . .
+    . # . . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    # # # . .
+    # # . . #
+    # . . . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # . . .
+    . # . # .
+    . # # # .
+    . . . . .
+    # # # . .
+    `),
+    images.createImage(`
+    # . . . .
+    # . # . #
+    # # # . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . . # . .
+    . # # # .
+    . # . # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # . . .
+    # # # . #
+    # . # . .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # . .
+    . # # # .
+    . # # # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # . . .
+    . # # # .
+    . . . . .
+    # # # . .
+    `),
+    images.createImage(`
+    # # # . .
+    # . . . #
+    # # # . .
+    . . . . .
+    # # # . .
+    `),
+    images.createImage(`
+    . # # . .
+    . # . # .
+    . # # # .
+    . . . . .
+    # # # . .
+    `),
+    images.createImage(`
+    # # . . .
+    # . # . #
+    # # # . .
+    . . . . .
+    # # # . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # # . .
+    . # # # .
+    . . . . .
+    # # # . .
+    `),
+    images.createImage(`
+    . # # # .
+    . # # . .
+    . # . . .
+    . . . . .
+    # # # . .
+    `),
+    images.createImage(`
+    # # # . .
+    # # . . #
+    # . . . .
+    . . . . .
+    # # # . .
+    `),
+    images.createImage(`
+    . # . . .
+    . # . # .
+    . # # # .
+    . . . . .
+    # # # . .
+    `),
+    images.createImage(`
+    # . . . .
+    # . # . #
+    # # # . .
+    . . . . .
+    # # # . .
+    `),
+    images.createImage(`
+    . . # . .
+    . # # # .
+    . # . # .
+    . . . . .
+    # # . . .
+    `),
+    images.createImage(`
+    . # . . .
+    # # # . #
+    # . # . .
+    . . . . .
+    # # # . .
+    `),
+    images.createImage(`
+    . # # . .
+    . # # # .
+    . # # # .
+    . . . . .
+    # # # . .
+    `)
+]
+
 //% color="#E63022"
+//% groups='["Store a song", "Song actions", "Get current note"]'
 namespace waves {
     // Loading up for the first time
     let sheet = ""
@@ -110,14 +546,25 @@ namespace waves {
     let musicState = 0
     let timbre = WaveShape.Square
     let sheetVersion = "0"
-    let storedTimer = 0
-    let readState = 0
+    let hertzToPlay = 0
+
     let chordDistance = 0
     let chordIndex = 0
     let chordOrigin = 0
+    let storedTimer = 0
+    let checkChord = false
+
+    let repeatOrigin = 0
+    let repeatTimes = 0
+    let checkRepeat = false
+
+    let volumeStart = 255
+    let volumeEnd = 255
 
     basic.forever(function(){
-        readIndex()
+        if (musicState == 1){
+            readIndex()
+        }
     })
     
     function readIndex() {
@@ -127,91 +574,159 @@ namespace waves {
 
             // Get the content from a part of the sheet
             let content = sheet.substr(index, 3)
+            let contentNext = sheet.substr(index + 3, 3)
 
+            // Check if content contains a command
             if (labelArray.indexOf(content.substr(0, 2)) == -1) {
                 index += 3
-
                 if (content.charAt(0) == "$") {
                     timbre = timbreArray.get(parseInt(content.charAt(1)))
+
+                    let volumeString = volumeFxArray.get(parseInt(content.charAt(2)))
+                    volumeStart = parseInt(volumeString.substr(0, 3))
+                    volumeEnd = parseInt(volumeString.substr(4, 3))
                 } else if (content.charAt(0) == "%") {
-                    readState = 1
+                    checkChord = true
                     storedTimer = input.runningTime() + (music.beat(BeatFraction.Half) * parseInt(content.charAt(1)))
                     chordDistance = parseInt(content.charAt(2))
                     chordOrigin = index
+                } else if (content.charAt(0) == "@"){
+                    if (content.substr(1, 2) == ".."){
+                        if (repeatTimes == 0) {
+                            checkRepeat = false
+                            index += 3
+                        } else {
+                            index = repeatOrigin
+                            repeatTimes -= 1
+                        }
+                    } else {
+                    checkRepeat = true
+                    repeatOrigin = index - 3
+                    repeatTimes = parseInt(content.substr(1, 2)) - 1
+                    }
                 }
-
-                readIndex()
-            
             } else {
 
                 let noteDurat = 0
                 
                 // Set hertz
-                let hertzToPlay = labelArray.indexOf(content.substr(0, 2))
+                hertzToPlay = labelArray.indexOf(content.substr(0, 2))
                 hertzToPlay = hertzArray.get(hertzToPlay)
 
-                if (readState == 1 && input.runningTime() < storedTimer) {
-                    noteDurat = 30
-                    chordIndex += 1
-                    if (chordIndex == chordDistance){
-                        chordIndex = 0
-                        index -= (chordDistance) * 3
+                // Set noteDurat based on the 3rd character in content
+                noteDurat = music.beat(BeatFraction.Whole) / parseInt(content.charAt(2))
+
+                if (checkChord){
+                    if (input.runningTime() < storedTimer){
+                        noteDurat = 30
+                        chordIndex += 1
+                        if (chordIndex == chordDistance) {
+                            chordIndex = 0
+                            index -= (chordDistance) * 3
+                        }
+                    } else {
+                        checkChord = false
+                        index = (chordOrigin + (chordDistance * 3)) - 3
                     }
+                }
+                
+                if (checkRepeat && (!(checkChord)) && contentNext == "@.."){
+                    if (repeatTimes == 0){
+                        checkRepeat = false
+                        index += 3
+                    } else {
+                        index = repeatOrigin
+                        repeatTimes -= 1
+                    }
+                }
+                
+                // All is done, play the note!
+                if (checkChord) {
+                    music.play(music.createSoundExpression(
+                        timbre,
+                        hertzToPlay, hertzToPlay,
+                        255, 255,
+                        noteDurat, SoundExpressionEffect.None, InterpolationCurve.Linear),
+                        music.PlaybackMode.InBackground)
                 } else {
-                    if (readState == 1){
-                        index = chordOrigin
-                        readState = 0
-                    }
-                    // Set noteDurat based on the 3rd character in content
-                    noteDurat = music.beat(BeatFraction.Whole) / parseInt(content.charAt(2))
+                    music.play(music.createSoundExpression(
+                        timbre,
+                        hertzToPlay, hertzToPlay,
+                        volumeStart, volumeEnd,
+                        noteDurat, SoundExpressionEffect.None, InterpolationCurve.Linear),
+                        music.PlaybackMode.InBackground)
                 }
 
-                music.play(music.createSoundExpression(
-                    timbre,
-                    hertzToPlay, hertzToPlay,
-                    255, 255,
-                    noteDurat, SoundExpressionEffect.None, InterpolationCurve.Linear),
-                    music.PlaybackMode.InBackground)
-                
                 index += 3
             }
         }
     }
 
     //% block="$action song"
+    //% group="Song actions"
     export function songAction(action: WavesActions) {
         music.stopAllSounds
         if (action == WavesActions.Play || action == WavesActions.Restart) {
             musicState = 1
             if (action == WavesActions.Restart) {
                 index = 6
-                readState = 0
+                checkChord = false
+                checkRepeat = false
             }
         } else {
             musicState = 0
             if (action == WavesActions.Stop) {
                 index = 6
-                readState = 0
+                checkChord = false
+                checkRepeat = false
             }
         }
     }
 
     //% block="Store preset song $presetToStore"
+    //% group="Store a song"
     export function storePreset(presetToStore: WavesPreset) {
         sheet = sheet
         music.setTempo(parseFloat(sheet.substr(3, 3)))
         sheetVersion = sheet.substr(0, 3)
     }
 
+    //% sheetToStore.defl=["000", "150", "C21D21E21F21G21A21B21C31"]
     //% block="Store custom song $sheetToStore"
-    export function storeCustom(sheetToStore: string) {
-        sheet = sheetToStore
+    //% group="Store a song"
+    export function storeCustom(sheetToStore: string[]) {
+        // Convert sheet array to string
+        sheet = ""
+        for (let i = 0; i < 5; i++) {
+            sheet = sheet + sheetToStore.get(i)
+        }
+
+        // Set other variables
         music.setTempo(parseFloat(sheet.substr(3, 3)))
         sheetVersion = sheet.substr(0, 3)
     }
-
+    
     //% block="Set loop to $loopBool"
+    //% group="Song actions"
     export function songLoop(loopBool: boolean) {
         loop = loopBool
+    }
+
+    //% block="Get current note name"
+    //% group="Get current note"
+    export function currentNoteName(){
+        return labelArray.get(hertzArray.indexOf(hertzToPlay))
+    }
+
+    //% block="Get current note image"
+    //% group="Get current note"
+    export function currentNoteImage() {
+    return displayArray.get(hertzArray.indexOf(hertzToPlay))
+    }
+
+    //% block="Get current note value"
+    //% group="Get current note"
+    export function currentNoteValue() {
+        return hertzArray.indexOf(hertzToPlay)
     }
 }
