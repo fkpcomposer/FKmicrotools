@@ -538,7 +538,7 @@ let displayArray = [
     `)
 ]
 
-//% color="#E63022" icon="\uf1c7"
+//% color="#F57F17" icon="\uf1c7"
 //% groups='["Store a song", "Song actions", "Get current note"]'
 namespace waves {
     // Loading up for the first time
@@ -562,13 +562,13 @@ namespace waves {
 
     let volumeStart = 255
     let volumeEnd = 255
-    
+
     loops.everyInterval(1, songCycle)
-    
+
     function songCycle() {
-        if (index > sheet.length){
+        if (index > sheet.length) {
             musicState = 0
-        } else if (!(music.isSoundPlaying()) && musicState == 1){
+        } else if (!(music.isSoundPlaying()) && musicState == 1) {
 
             // Get the content from a part of the sheet
             let content = sheet.substr(index, 3)
@@ -588,8 +588,8 @@ namespace waves {
                     storedTimer = input.runningTime() + (music.beat(BeatFraction.Half) * parseInt(content.charAt(1)))
                     chordDistance = parseInt(content.charAt(2))
                     chordOrigin = index
-                } else if (content.charAt(0) == "@"){
-                    if (content.substr(1, 2) == ".."){
+                } else if (content.charAt(0) == "@") {
+                    if (content.substr(1, 2) == "..") {
                         if (repeatTimes == 0) {
                             checkRepeat = false
                             index += 3
@@ -598,15 +598,15 @@ namespace waves {
                             repeatTimes -= 1
                         }
                     } else {
-                    checkRepeat = true
-                    repeatOrigin = index - 3
-                    repeatTimes = parseInt(content.substr(1, 2)) - 1
+                        checkRepeat = true
+                        repeatOrigin = index - 3
+                        repeatTimes = parseInt(content.substr(1, 2)) - 1
                     }
                 }
             } else {
 
                 let noteDurat = 0
-                
+
                 // Set hertz
                 hertzToPlay = labelArray.indexOf(content.substr(0, 2))
                 hertzToPlay = hertzArray.get(hertzToPlay)
@@ -614,8 +614,8 @@ namespace waves {
                 // Set noteDurat based on the 3rd character in content
                 noteDurat = music.beat(BeatFraction.Whole) / parseInt(content.charAt(2))
 
-                if (checkChord){
-                    if (input.runningTime() < storedTimer){
+                if (checkChord) {
+                    if (input.runningTime() < storedTimer) {
                         noteDurat = 15
                         chordIndex += 1
                         if (chordIndex == chordDistance || chordOrigin + chordDistance < index) {
@@ -627,9 +627,9 @@ namespace waves {
                         index = (chordOrigin + (chordDistance * 3)) - 3
                     }
                 }
-                
-                if (checkRepeat && (!(checkChord)) && contentNext == "@.."){
-                    if (repeatTimes == 0){
+
+                if (checkRepeat && (!(checkChord)) && contentNext == "@..") {
+                    if (repeatTimes == 0) {
                         checkRepeat = false
                         index += 3
                     } else {
@@ -637,7 +637,7 @@ namespace waves {
                         repeatTimes -= 1
                     }
                 }
-                
+
                 // All is done, play the note!
                 if (checkChord) {
                     music.play(music.createSoundExpression(
@@ -691,17 +691,16 @@ namespace waves {
         sheetVersion = sheet.substr(0, 3)
     }
 
-    //% sheetToStore.defl=["000", "150", "C21D21E21F21G21A21B21C31"]
     //% block="Store custom song $sheetToStore"
     //% group="Store a song"
-    export function storeCustom(sheetToStore: any[]) {
+    export function storeCustom(sheetToStore: string[]) {
         // Convert sheet array to string
         sheet = ""
         let item = ""
 
         for (let i = 0; i < sheetToStore.length; i++) {
             item = sheetToStore.get(i)
-            if (item.charAt(0) == "#"){
+            if (item.charAt(0) == "#") {
             } else if (item.substr(0, 8) == "copyItem") {
                 sheet = sheet + sheetToStore.get(parseInt(item.substr(9, item.length)))
             } else {
@@ -713,7 +712,7 @@ namespace waves {
         music.setTempo(parseFloat(sheet.substr(3, 3)))
         sheetVersion = sheet.substr(0, 3)
     }
-    
+
     //% block="Set loop to $loopBool"
     //% group="Song actions"
     export function songLoop(loopBool: boolean) {
@@ -722,7 +721,7 @@ namespace waves {
 
     //% block="Get current note name"
     //% group="Get current note"
-    export function currentNoteName(){
+    export function currentNoteName() {
         return labelArray.get(hertzArray.indexOf(hertzToPlay))
     }
 
