@@ -420,7 +420,7 @@ let displayArray = [
     . # . # .
     . # # # .
     . . . . .
-    # # # . .
+    # # . . .
     `),
     images.createImage(`
     # . . . .
@@ -547,6 +547,7 @@ namespace waves {
     let timbre = WaveShape.Square
     let sheetVersion = "0"
     let hertzToPlay = 0
+    let nextNoteTime = input.runningTime()
 
     let chordDistance = 0
     let chordIndex = 0
@@ -560,17 +561,13 @@ namespace waves {
 
     let volumeStart = 255
     let volumeEnd = 255
-
-    basic.forever(function(){
-        if (musicState == 1){
-            readIndex()
-        }
-    })
     
-    function readIndex() {
+    loops.everyInterval(1, songCycle)
+    
+    function songCycle() {
         if (index > sheet.length){
             musicState = 0
-        } else if(!(music.isSoundPlaying())){
+        } else if (!(music.isSoundPlaying()) && musicState == 1){
 
             // Get the content from a part of the sheet
             let content = sheet.substr(index, 3)
@@ -646,17 +643,20 @@ namespace waves {
                         timbre,
                         hertzToPlay, hertzToPlay,
                         255, 255,
-                        noteDurat, SoundExpressionEffect.None, InterpolationCurve.Linear),
+                        noteDurat,
+                        SoundExpressionEffect.None, InterpolationCurve.Linear),
                         music.PlaybackMode.InBackground)
                 } else {
                     music.play(music.createSoundExpression(
                         timbre,
                         hertzToPlay, hertzToPlay,
                         volumeStart, volumeEnd,
-                        noteDurat, SoundExpressionEffect.None, InterpolationCurve.Linear),
+                        noteDurat,
+                        SoundExpressionEffect.None, InterpolationCurve.Linear),
                         music.PlaybackMode.InBackground)
                 }
 
+                nextNoteTime = input.runningTime() + noteDurat
                 index += 3
             }
         }
