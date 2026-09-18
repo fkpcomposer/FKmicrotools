@@ -1,3 +1,5 @@
+// This extension is part of FKmicrotools in https://github.com/fkpcomposer/FKmicrotools/
+
 let labelArray = [
     "HH",
     "C1",
@@ -536,7 +538,7 @@ let displayArray = [
     `)
 ]
 
-//% color="#E63022"
+//% color="#E63022" icon="\uf1c7"
 //% groups='["Store a song", "Song actions", "Get current note"]'
 namespace waves {
     // Loading up for the first time
@@ -547,7 +549,6 @@ namespace waves {
     let timbre = WaveShape.Square
     let sheetVersion = "0"
     let hertzToPlay = 0
-    let nextNoteTime = input.runningTime()
 
     let chordDistance = 0
     let chordIndex = 0
@@ -615,11 +616,11 @@ namespace waves {
 
                 if (checkChord){
                     if (input.runningTime() < storedTimer){
-                        noteDurat = 30
+                        noteDurat = 15
                         chordIndex += 1
-                        if (chordIndex == chordDistance) {
+                        if (chordIndex == chordDistance || chordOrigin + chordDistance < index) {
                             chordIndex = 0
-                            index -= (chordDistance) * 3
+                            index = chordOrigin - 3
                         }
                     } else {
                         checkChord = false
@@ -656,7 +657,6 @@ namespace waves {
                         music.PlaybackMode.InBackground)
                 }
 
-                nextNoteTime = input.runningTime() + noteDurat
                 index += 3
             }
         }
