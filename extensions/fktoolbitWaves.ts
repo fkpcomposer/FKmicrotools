@@ -694,11 +694,19 @@ namespace waves {
     //% sheetToStore.defl=["000", "150", "C21D21E21F21G21A21B21C31"]
     //% block="Store custom song $sheetToStore"
     //% group="Store a song"
-    export function storeCustom(sheetToStore: string[]) {
+    export function storeCustom(sheetToStore: any[]) {
         // Convert sheet array to string
         sheet = ""
-        for (let i = 0; i < 5; i++) {
-            sheet = sheet + sheetToStore.get(i)
+        let item = ""
+
+        for (let i = 0; i < sheetToStore.length; i++) {
+            item = sheetToStore.get(i)
+            if (item.charAt(0) == "#"){
+            } else if (item.substr(0, 8) == "copyItem") {
+                sheet = sheet + sheetToStore.get(parseInt(item.substr(9, item.length)))
+            } else {
+                sheet = sheet + sheetToStore.get(i)
+            }
         }
 
         // Set other variables
@@ -721,7 +729,7 @@ namespace waves {
     //% block="Get current note image"
     //% group="Get current note"
     export function currentNoteImage() {
-    return displayArray.get(hertzArray.indexOf(hertzToPlay))
+        return displayArray.get(hertzArray.indexOf(hertzToPlay))
     }
 
     //% block="Get current note value"
