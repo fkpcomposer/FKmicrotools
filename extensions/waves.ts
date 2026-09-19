@@ -562,6 +562,10 @@ namespace waves {
 
     let volumeStart = 255
     let volumeEnd = 255
+    let volumePercent = 100
+
+    let effectSlide = false
+    let lastHertz= 0
 
     loops.everyInterval(1, songCycle)
 
@@ -585,16 +589,15 @@ namespace waves {
                     volumeEnd = parseInt(volumeString.substr(4, 3))
                 } else if (content.charAt(0) == "%") {
                     checkChord = true
-                    storedTimer = input.runningTime() + (music.beat(BeatFraction.Half) * parseInt(content.charAt(1)))
-                    chordDistance = parseInt(content.charAt(2))
+                    chordDistance = parseInt(content.charAt(1))
+                    storedTimer = input.runningTime() + (music.beat(BeatFraction.Half) * parseInt(content.charAt(2)))
                     chordOrigin = index
                 } else if (content.charAt(0) == "@") {
                     if (content.substr(1, 2) == "..") {
                         if (repeatTimes == 0) {
                             checkRepeat = false
-                            index += 3
                         } else {
-                            index = repeatOrigin
+                            index = repeatOrigin + 3
                             repeatTimes -= 1
                         }
                     } else {
@@ -602,17 +605,51 @@ namespace waves {
                         repeatOrigin = index - 3
                         repeatTimes = parseInt(content.substr(1, 2)) - 1
                     }
+                } else if (content.charAt(0) == "!"){
+                    if (content.substr(1, 2) == "ra"){
+                        volumePercent = 2763
+                    } else {
+                        volumePercent = parseInt(content.substr(1, 2))
+                        if (volumePercent < 1){
+                            volumePercent = 100
+                        }
+                    }
+                } else if (content.charAt(0) == "&"){
+                    let setThisTo = false
+                    if (content.charAt(2) == "1"){
+                        setThisTo = true
+                    } else {
+                        setThisTo = false
+                    }
+
+                    if (content.charAt(1) == "0") {
+                        effectSlide = setThisTo
+                    }
                 }
             } else {
 
                 let noteDurat = 0
+                let allowRepeatCode = true
 
                 // Set hertz
                 hertzToPlay = labelArray.indexOf(content.substr(0, 2))
                 hertzToPlay = hertzArray.get(hertzToPlay)
 
                 // Set noteDurat based on the 3rd character in content
+                if (content.charAt(2) == "D"){
+                    noteDurat = music.beat(BeatFraction.Double)
+                } else if (content.charAt(2) == "T") {
+                    noteDurat = music.beat(BeatFraction.Whole * 3)
+                } else if (content.charAt(2) == "Q") {
+                    noteDurat = music.beat(BeatFraction.Double) * 2
+                } else {
                 noteDurat = music.beat(BeatFraction.Whole) / parseInt(content.charAt(2))
+                }
+
+                if (effectSlide && (!(hertzToPlay == lastHertz)) && 29 < noteDurat){
+                    noteDurat = 30
+                    allowRepeatCode = false
+                }
 
                 if (checkChord) {
                     if (input.runningTime() < storedTimer) {
@@ -638,25 +675,40 @@ namespace waves {
                     }
                 }
 
+                // Set volume
+                let playedVolume = volumePercent / 100
+                if (volumePercent == 2763){
+                    playedVolume = Math.random() * 100
+                    playedVolume = 255 - playedVolume
+                }
+
+                // Set initial hertz
+                let initialHertz = hertzToPlay
+                if (effectSlide && (!(hertzToPlay == lastHertz)) && 29 < noteDurat) {
+                    initialHertz = lastHertz
+                    index -= 3
+                }
+
                 // All is done, play the note!
                 if (checkChord) {
                     music.play(music.createSoundExpression(
                         timbre,
                         hertzToPlay, hertzToPlay,
-                        255, 255,
+                        playedVolume * 255, playedVolume * 255,
                         noteDurat,
                         SoundExpressionEffect.None, InterpolationCurve.Linear),
                         music.PlaybackMode.InBackground)
                 } else {
                     music.play(music.createSoundExpression(
                         timbre,
-                        hertzToPlay, hertzToPlay,
-                        volumeStart, volumeEnd,
+                        initialHertz, hertzToPlay,
+                        volumeStart * playedVolume, volumeEnd * playedVolume,
                         noteDurat,
                         SoundExpressionEffect.None, InterpolationCurve.Linear),
                         music.PlaybackMode.InBackground)
                 }
 
+                lastHertz = hertzToPlay
                 index += 3
             }
         }
