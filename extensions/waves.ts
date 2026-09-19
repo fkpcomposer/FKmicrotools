@@ -1,4 +1,4 @@
-// This extension is part of FKmicrotools: https://github.com/fkpcomposer/FKmicrotools/
+// This extension is part of FKmicrotools in https://github.com/fkpcomposer/FKmicrotools/
 
 let labelArray = [
     "HH",
@@ -140,8 +140,8 @@ let volumeFxArray = [
     "255 255",
     "255 100",
     "255 000",
-    "000 255",
     "100 255",
+    "000 255"
 ]
 
 enum WavesPreset {
@@ -586,7 +586,7 @@ let displayArray = [
     `)
 ]
 
-//% color="#F57F17" icon="\uf1c7"
+//% color="#db00be" icon="\uf1c7"
 //% groups='["Store a song", "Song actions", "Get current note"]'
 namespace waves {
     // Loading up for the first time
