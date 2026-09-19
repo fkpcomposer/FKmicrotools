@@ -6,15 +6,20 @@ enum EnumVFX {
     //% block="invert"
     Invert,
     //% block="threshold"
-    Threshold
+    Threshold,
+    //% block="skew horizontally"
+    SkewHorizontal,
+    //% block="skew vertically"
+    SkewVertical,
+    //% block="noise"
+    Noise
 }
 
-let stored_img = [0]
-let coord = 0
-let intensity = 0
-
-//% color="#badb00" icon="\uf042"
+//% color="#69731c" icon="\uf042"
 namespace Filters {
+    let stored_img = [0]
+    let coord = 0
+    let intensity = 0
 
     /**
     * @param funcVFX What effect will be applied to the screen?
@@ -23,8 +28,9 @@ namespace Filters {
     //% funcIntensity.min=0 funcIntensity.max=255
     //% block="Apply $funcVFX with intensity $funcIntensity"
     export function apply(funcVFX: EnumVFX, funcIntensity: number) {
+        convert_to_array()
         if (funcVFX == EnumVFX.Spread) {
-            erase_screen_and_convert_to_array()
+            erase_screen()
             intensity = funcIntensity / 255
             for (let index = 0; index <= 24; index++) {
                 led.plotBrightness(index % 5, Math.floor(index / 5), stored_img[index] + led.pointBrightness(index % 5, Math.floor(index / 5)))
@@ -45,6 +51,7 @@ namespace Filters {
                 led.plotBrightness(index % 5, Math.floor(index / 5), thisLEDbright)
             }
         } else if (funcVFX == EnumVFX.Threshold) {
+            intensity = funcIntensity
             for (let index = 0; index <= 24; index++) {
                 if (intensity <= led.pointBrightness(index % 5, Math.floor(index / 5))) {
                     led.plot(index % 5, Math.floor(index / 5))
@@ -52,14 +59,47 @@ namespace Filters {
                     led.unplot(index % 5, Math.floor(index / 5))
                 }
             }
+        } else if (funcVFX == EnumVFX.SkewHorizontal) {
+            intensity = funcIntensity / 255
+            erase_screen()
+            for (let index = 0; index <= 24; index++) {
+                led.plotBrightness(
+                    (index % 5) + ((Math.floor(index / 5) - 2) * intensity),
+                    Math.floor(index / 5), stored_img[index])
+            }
+        } else if (funcVFX == EnumVFX.SkewVertical) {
+            intensity = funcIntensity / 255
+            erase_screen()
+            for (let index = 0; index <= 24; index++) {
+                led.plotBrightness(
+                    (index % 5),
+                    Math.floor(index / 5) + (((index % 5) - 2) * intensity),
+                    stored_img[index]
+                )
+            }
+        } else if (funcVFX == EnumVFX.Noise) {
+            intensity = funcIntensity * 2
+            for (let index = 0; index <= 24; index++) {
+                led.plotBrightness(index % 5, Math.floor(index / 5), led.pointBrightness(index % 5, Math.floor(index / 5)) + ((Math.random() - 0.5) * intensity))
+            }
         }
     }
 
-    function erase_screen_and_convert_to_array() {
+    //% block="Restore image after last effect"
+    export function restore(){
+        for (let index = 0; index <= 24; index++) {
+            led.plotBrightness(index % 5, Math.floor(index / 5), stored_img[index])
+        }
+    }
+
+    function convert_to_array() {
         stored_img = []
         for (let index = 0; index <= 24; index++) {
             stored_img.push(led.pointBrightness(index % 5, Math.floor(index / 5)))
         }
+    }
+
+    function erase_screen(){
         images.createImage(`
         . . . . .
         . . . . .
