@@ -1,4 +1,4 @@
-// This extension is part of FKmicrotools in https://github.com/fkpcomposer/FKmicrotools/
+// This extension is part of FKmicrotools: https://github.com/fkpcomposer/FKmicrotools/
 
 let labelArray = [
     "HH",
