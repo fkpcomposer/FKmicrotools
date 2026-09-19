@@ -1,6 +1,6 @@
 // This extension is part of FKmicrotools: https://github.com/fkpcomposer/FKmicrotools/
 
-enum EnumVFX {
+enum EnumPresets {
     //% block="spread"
     Spread,
     //% block="invert"
@@ -27,9 +27,9 @@ namespace Filters {
     */
     //% funcIntensity.min=0 funcIntensity.max=255
     //% block="Apply $funcVFX with intensity $funcIntensity"
-    export function apply(funcVFX: EnumVFX, funcIntensity: number) {
+    export function apply(funcVFX: EnumPresets, funcIntensity: number) {
         convert_to_array()
-        if (funcVFX == EnumVFX.Spread) {
+        if (funcVFX == EnumPresets.Spread) {
             erase_screen()
             intensity = funcIntensity / 255
             for (let index = 0; index <= 24; index++) {
@@ -43,14 +43,14 @@ namespace Filters {
                 coord = 1 + Math.floor(index / 5)
                 led.plotBrightness(index % 5, coord, stored_img[index] * intensity + led.pointBrightness(index % 5, coord))
             }
-        } else if (funcVFX == EnumVFX.Invert) {
+        } else if (funcVFX == EnumPresets.Invert) {
             intensity = 1 + ((funcIntensity / 255) * -2)
             for (let index = 0; index <= 24; index++) {
                 let thisLEDbright = led.pointBrightness(index % 5, Math.floor(index / 5)) - (255 / 2)
                 thisLEDbright = (thisLEDbright * intensity) + (255 / 2)
                 led.plotBrightness(index % 5, Math.floor(index / 5), thisLEDbright)
             }
-        } else if (funcVFX == EnumVFX.Threshold) {
+        } else if (funcVFX == EnumPresets.Threshold) {
             intensity = funcIntensity
             for (let index = 0; index <= 24; index++) {
                 if (intensity <= led.pointBrightness(index % 5, Math.floor(index / 5))) {
@@ -59,7 +59,7 @@ namespace Filters {
                     led.unplot(index % 5, Math.floor(index / 5))
                 }
             }
-        } else if (funcVFX == EnumVFX.SkewHorizontal) {
+        } else if (funcVFX == EnumPresets.SkewHorizontal) {
             intensity = funcIntensity / 255
             erase_screen()
             for (let index = 0; index <= 24; index++) {
@@ -67,7 +67,7 @@ namespace Filters {
                     (index % 5) + ((Math.floor(index / 5) - 2) * intensity),
                     Math.floor(index / 5), stored_img[index])
             }
-        } else if (funcVFX == EnumVFX.SkewVertical) {
+        } else if (funcVFX == EnumPresets.SkewVertical) {
             intensity = funcIntensity / 255
             erase_screen()
             for (let index = 0; index <= 24; index++) {
@@ -77,7 +77,7 @@ namespace Filters {
                     stored_img[index]
                 )
             }
-        } else if (funcVFX == EnumVFX.Noise) {
+        } else if (funcVFX == EnumPresets.Noise) {
             intensity = funcIntensity * 2
             for (let index = 0; index <= 24; index++) {
                 led.plotBrightness(index % 5, Math.floor(index / 5), led.pointBrightness(index % 5, Math.floor(index / 5)) + ((Math.random() - 0.5) * intensity))
